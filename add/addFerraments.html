@@ -1,0 +1,107 @@
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia Interativo de Ferramentas Full-Stack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Calm Harmony (Light Slate/Gray background, Teal accents, Dark Slate text) -->
+    <!-- Application Structure Plan: A dashboard-style single-page application featuring a dynamic, filterable grid of cards. The primary navigation is achieved through category filter buttons and a text search bar. This structure was chosen to transform the static, lengthy table from the source report into an interactive and user-friendly exploration tool. It allows users to quickly find relevant tools without being overwhelmed by the sheer volume of information, which directly addresses the core usability problem of the original format. Now includes a form to dynamically add new tools, enhancing user engagement and customization. -->
+    <!-- Visualization & Content Choices: The core data from the report's table is presented in individual 'cards'. Report Info: Each row of the tool table. Goal: Organize & Compare. Viz/Presentation Method: An HTML/CSS card in a responsive grid. Interaction: Users can filter the entire grid of cards by clicking on category buttons or by typing in a search bar. A new interaction allows users to add new tools via a form, which are then immediately displayed in the grid. This interaction is powered by Vanilla JavaScript. Justification: This approach is highly interactive and intuitive, allowing users to drill down into the data effectively and contribute to the data set (session-only). It's a significant improvement over a static table for discovery, usability, and engagement. Library/Method: HTML, Tailwind CSS, Vanilla JavaScript. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            background-color: #f8fafc; 
+        }
+        .filter-button.active {
+            background-color: #0d9488;
+            color: white;
+            font-weight: 600;
+        }
+        .tool-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .hidden-form {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .hidden-form.show {
+            max-height: 1000px; /* Arbitrary large value to allow content to show */
+            transition: max-height 0.5s ease-in;
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Guia Interativo de Ferramentas</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Um ecossistema completo para desenvolvedores Full-Stack e profissionais de TI. Use os filtros abaixo para explorar as ferramentas por categoria ou pesquisar diretamente pelo nome.</p>
+        </header>
+
+        <section id="filters" class="mb-10">
+            <div class="mb-6">
+                <input type="search" id="search-input" placeholder="Pesquisar por nome da ferramenta..." class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div id="category-filters" class="flex flex-wrap gap-2 justify-center">
+            </div>
+        </section>
+
+        <section class="mb-10 p-6 bg-white rounded-lg shadow-md">
+            <h2 class="text-2xl font-bold text-slate-900 mb-4">Adicionar Nova Ferramenta</h2>
+            <button id="toggle-add-tool-form" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors mb-4">
+                Mostrar/Esconder Formulário
+            </button>
+            <p class="text-sm text-slate-500 mb-4">Ferramentas adicionadas aqui não serão salvas permanentemente e desaparecerão ao recarregar a página.</p>
+
+            <form id="add-tool-form" class="hidden-form grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="tool-name" class="block text-sm font-medium text-slate-700">Nome da Ferramenta</label>
+                    <input type="text" id="tool-name" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" required>
+                </div>
+                <div>
+                    <label for="tool-group" class="block text-sm font-medium text-slate-700">Grupo Principal (para filtro)</label>
+                    <input type="text" id="tool-group" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Ex: Linguagens e Desenvolvimento Geral" required>
+                </div>
+                <div>
+                    <label for="tool-category" class="block text-sm font-medium text-slate-700">Categoria (ex: IDE, Linter)</label>
+                    <input type="text" id="tool-category" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Ex: Linguagem de Programação" required>
+                </div>
+                <div>
+                    <label for="tool-platform" class="block text-sm font-medium text-slate-700">Plataforma Associada</label>
+                    <input type="text" id="tool-platform" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Ex: Multiplataforma" required>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="tool-description" class="block text-sm font-medium text-slate-700">Descrição do Uso Principal</label>
+                    <textarea id="tool-description" rows="3" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" required></textarea>
+                </div>
+                <div>
+                    <label for="link-linux" class="block text-sm font-medium text-slate-700">Link para Linux</label>
+                    <input type="url" id="link-linux" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="https://exemplo.com/linux">
+                </div>
+                <div>
+                    <label for="link-windows" class="block text-sm font-medium text-slate-700">Link para Windows</label>
+                    <input type="url" id="link-windows" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="https://exemplo.com/windows">
+                </div>
+                <div class="md:col-span-2 flex justify-end">
+                    <button type="submit" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors">
+                        Adicionar Ferramenta
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <main id="tools-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        </main>
+
+    </div>
+
+    <script src="../script.js"></script>
+
+</body>
+</html>
