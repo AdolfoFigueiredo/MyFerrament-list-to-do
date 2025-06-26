@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Guia Interativo de Ferramentas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Calm Harmony (Light Slate/Gray background, Teal accents, Dark Slate text) -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Tailwind slate-50 */
+        }
+        .filter-button.active {
+            background-color: #0d9488; /* Tailwind teal-700 */
+            color: white;
+            font-weight: 600;
+        }
+        .tool-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+        .hidden-form {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .hidden-form.show {
+            max-height: 1000px; /* Arbitrary large value to allow content to show */
+            transition: max-height 0.5s ease-in;
+        }
+        .btn-primary {
+            background-color: #0d9488; /* teal-700 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.2s ease-in-out;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #0f766e; /* teal-800 */
+        }
+    </style>
+</head>
+<body class="text-slate-800">
+
+    <div id="app" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl md:text-5xl font-bold text-slate-900 tracking-tight">Guia Interativo de Ferramentas</h1>
+            <p class="mt-4 text-lg text-slate-600 max-w-3xl mx-auto">Um ecossistema completo para desenvolvedores Full-Stack e profissionais de TI. Use os filtros abaixo para explorar as ferramentas por categoria ou pesquisar diretamente pelo nome.</p>
+            
+            <div class="mt-6 flex justify-center items-center gap-4">
+                <p class="text-slate-700">Bem-vindo(a), <span id="userName" class="font-semibold text-teal-700"></span>!</p>
+                <p class="text-slate-700">Seu papel: <span id="userRole" class="font-semibold text-teal-700"></span></p>
+                <button id="logoutBtn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors">Sair</button>
+            </div>
+        </header>
+
+        <section id="filters" class="mb-10">
+            <div class="mb-6">
+                <input type="search" id="searchInput" placeholder="Pesquisar por nome da ferramenta..." class="w-full px-4 py-3 border border-slate-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500">
+            </div>
+            <div id="categoryFilters" class="flex flex-wrap gap-2 justify-center">
+                <!-- Filtros de categoria serão inseridos aqui pelo JS -->
+            </div>
+        </section>
+
+        <section id="addToolSection" class="mb-10 p-6 bg-white rounded-lg shadow-md hidden">
+            <h2 class="text-2xl font-bold text-slate-900 mb-4">Adicionar Nova Ferramenta</h2>
+            <button id="toggleAddToolForm" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors mb-4">
+                Mostrar/Esconder Formulário
+            </button>
+            <p class="text-sm text-slate-500 mb-4">Ferramentas adicionadas aqui serão salvas permanentemente no banco de dados.</p>
+
+            <form id="addToolForm" class="hidden-form grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Campos do formulário: Ajustados para o backend -->
+                <div>
+                    <label for="toolName" class="block text-sm font-medium text-slate-700">Nome da Ferramenta</label>
+                    <input type="text" id="toolName" name="nome" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" required>
+                </div>
+                <div>
+                    <label for="toolType" class="block text-sm font-medium text-slate-700">Tipo (Categoria)</label>
+                    <input type="text" id="toolType" name="tipo" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Ex: Linguagem de Programação" required>
+                </div>
+                <div class="md:col-span-2">
+                    <label for="toolDescription" class="block text-sm font-medium text-slate-700">Descrição do Uso Principal</label>
+                    <textarea id="toolDescription" name="descricao" rows="3" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" required></textarea>
+                </div>
+                <div>
+                    <label for="toolUrlPrincipal" class="block text-sm font-medium text-slate-700">URL Principal</label>
+                    <input type="url" id="toolUrlPrincipal" name="url_principal" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="https://exemplo.com" required>
+                </div>
+                <div>
+                    <label for="toolPlatform" class="block text-sm font-medium text-slate-700">Plataforma Associada</label>
+                    <input type="text" id="toolPlatform" name="plataforma_associada" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Ex: Multiplataforma">
+                </div>
+                <div>
+                    <label for="toolStatusUse" class="block text-sm font-medium text-slate-700">Status de Uso</label>
+                    <select id="toolStatusUse" name="status_uso" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500">
+                        <option value="">Selecione</option>
+                        <option value="Ativo">Ativo</option>
+                        <option value="Obsoleto">Obsoleto</option>
+                        <option value="Em Desenvolvimento">Em Desenvolvimento</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="toolTags" class="block text-sm font-medium text-slate-700">Tags (separadas por vírgula)</label>
+                    <input type="text" id="toolTags" name="tags" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="Ex: web, backend, api">
+                </div>
+                <div>
+                    <label for="toolLinkWindows" class="block text-sm font-medium text-slate-700">Link Download Windows</label>
+                    <input type="url" id="toolLinkWindows" name="link_download_windows" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="https://exemplo.com/win">
+                </div>
+                <div>
+                    <label for="toolLinkLinux" class="block text-sm font-medium text-slate-700">Link Download Linux</label>
+                    <input type="url" id="toolLinkLinux" name="link_download_linux" class="mt-1 block w-full px-3 py-2 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-teal-500 focus:border-teal-500" placeholder="https://exemplo.com/linux">
+                </div>
+                <div class="md:col-span-2">
+                    <label for="toolNeedsDownload" class="block text-sm font-medium text-slate-700">Necessita Download?</label>
+                    <input type="checkbox" id="toolNeedsDownload" name="necessita_download" class="mt-1"> Sim
+                </div>
+                <div class="md:col-span-2 flex justify-end">
+                    <button type="submit" class="btn-primary mt-6">Adicionar Ferramenta</button>
+                </div>
+                 <div id="addToolMessage" class="message hidden"></div>
+            </form>
+        </section>
+
+        <main id="toolsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Cards de ferramentas serão carregados aqui -->
+        </main>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:3000/api'; // URL base para suas APIs (autenticação e ferramentas)
+
+        let currentUser = null; // Armazena as informações do usuário logado
+        let currentToken = null; // Armazena o JWT
+        let toolsData = []; // Armazena os dados das ferramentas carregadas do backend
+        let activeCategory = 'Todos'; // Categoria ativa para filtro
+
+        // Elementos do DOM
+        const userNameSpan = document.getElementById('userName');
+        const userRoleSpan = document.getElementById('userRole');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const addToolSection = document.getElementById('addToolSection');
+        const toggleAddToolFormBtn = document.getElementById('toggleAddToolForm');
+        const addToolForm = document.getElementById('addToolForm');
+        const toolsGrid = document.getElementById('toolsGrid');
+        const searchInput = document.getElementById('searchInput');
+        const categoryFiltersContainer = document.getElementById('categoryFilters');
+        const addToolMessage = document.getElementById('addToolMessage');
+
+
+        // --- Funções de Autenticação e Autorização ---
+
+        function checkAuthAndRedirect() {
+            currentToken = localStorage.getItem('token');
+            const userString = localStorage.getItem('user');
+
+            if (!currentToken || !userString) {
+                // Se não há token ou informações de usuário, redireciona para a página de login
+                window.location.href = 'auth.html';
+                return false;
+            }
+
+            try {
+                currentUser = JSON.parse(userString);
+                userNameSpan.textContent = currentUser.username;
+                userRoleSpan.textContent = currentUser.role;
+
+                // Mostra a seção de adicionar ferramenta apenas para super_admin
+                if (currentUser.role === 'super_admin') {
+                    addToolSection.classList.remove('hidden');
+                } else {
+                    addToolSection.classList.add('hidden'); // Garante que esteja oculto para outros
+                }
+            } catch (e) {
+                console.error("Erro ao parsear dados do usuário do localStorage:", e);
+                window.location.href = 'auth.html'; // Redireciona se os dados estiverem corrompidos
+                return false;
+            }
+            return true;
+        }
+
+        function handleLogout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'auth.html';
+        }
+
+        // --- Funções de Gerenciamento de Ferramentas (CRUD) ---
+
+        // Função para exibir mensagens na UI
+        function displayMessage(element, message, type) {
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.classList.remove('hidden');
+        }
+
+        // Função para esconder mensagens
+        function hideMessage(element) {
+            element.classList.add('hidden');
+            element.textContent = '';
+        }
+
+        async function fetchTools() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/ferramentas`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}` // Envia o token JWT
+                    }
+                });
+
+                if (!response.ok) {
+                    if (response.status === 401 || response.status === 403) {
+                        displayMessage(toolsGrid, 'Sessão expirada ou acesso negado. Por favor, faça login novamente.', 'error');
+                        setTimeout(handleLogout, 2000); // Redireciona após 2 segundos
+                        return;
+                    }
+                    throw new Error(`Erro ao buscar ferramentas: ${response.statusText}`);
+                }
+
+                toolsData = await response.json(); // Atualiza a variável global toolsData
+                renderTools(toolsData);
+                setupCategoryFilters(); // Re-cria os filtros com base nos dados mais recentes
+            } catch (error) {
+                console.error('Erro ao buscar ferramentas:', error);
+                toolsGrid.innerHTML = `<p class="text-slate-500 text-center">Não foi possível carregar as ferramentas. Erro: ${error.message}</p>`;
+            }
+        }
+
+        function renderTools(tools) {
+            toolsGrid.innerHTML = ''; // Limpa o grid
+            if (tools.length === 0) {
+                toolsGrid.innerHTML = `<p class="text-slate-500 md:col-span-2 lg:col-span-3 text-center">Nenhuma ferramenta encontrada com os filtros atuais.</p>`;
+                return;
+            }
+            tools.forEach(tool => {
+                const card = document.createElement('div');
+                card.className = 'tool-card bg-white rounded-lg shadow-md p-6 flex flex-col';
+
+                // Adaptação para os nomes dos campos do backend:
+                const name = tool.nome;
+                const category = tool.tipo;
+                const platform = tool.plataforma_associada || 'Não Informado';
+                const description = tool.descricao;
+                const linkLinux = tool.link_download_linux;
+                const linkWindows = tool.link_download_windows;
+                const needsDownload = tool.necessita_download;
+
+                const linksDisabled = (!linkLinux || linkLinux === '#') && (!linkWindows || linkWindows === '#');
+                const linkClasses = linksDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-teal-600';
+
+                card.innerHTML = `
+                    <div class="flex-grow">
+                        <div class="flex justify-between items-start mb-2">
+                            <h3 class="text-xl font-bold text-slate-900">${name}</h3>
+                            <span class="text-xs font-semibold bg-teal-100 text-teal-800 px-2 py-1 rounded-full whitespace-nowrap">${category}</span>
+                        </div>
+                        <p class="text-sm text-slate-500 mb-4">${platform}</p>
+                        <p class="text-slate-700">${description}</p>
+                    </div>
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex justify-end items-center gap-4">
+                        ${linkLinux && linkLinux !== '#' ? `
+                            <a href="${linkLinux}" target="_blank" rel="noopener noreferrer" class="text-slate-600 hover:text-teal-600" title="Download para Linux">
+                                <span class="text-2xl">🐧</span>
+                            </a>
+                        ` : `
+                            <span class="text-slate-400 opacity-50 cursor-not-allowed text-2xl" title="Link para Linux não disponível">🐧</span>
+                        `}
+                        ${linkWindows && linkWindows !== '#' ? `
+                            <a href="${linkWindows}" target="_blank" rel="noopener noreferrer" class="text-slate-600 hover:text-teal-600" title="Download para Windows">
+                                <span class="text-2xl">🪟</span>
+                            </a>
+                        ` : `
+                            <span class="text-slate-400 opacity-50 cursor-not-allowed text-2xl" title="Link para Windows não disponível">🪟</span>
+                        `}
+                    </div>
+                `;
+                toolsGrid.appendChild(card);
+            });
+        }
+
+        function applyFilters() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let filteredTools = toolsData;
+
+            if (activeCategory !== 'Todos') {
+                // Filtrar por 'tipo' que é a 'categoria' do backend
+                filteredTools = filteredTools.filter(tool => tool.tipo === activeCategory);
+            }
+
+            if (searchTerm) {
+                filteredTools = filteredTools.filter(tool => 
+                    tool.nome.toLowerCase().includes(searchTerm) ||
+                    tool.descricao.toLowerCase().includes(searchTerm) ||
+                    tool.tipo.toLowerCase().includes(searchTerm) || // Usar 'tipo'
+                    (tool.plataforma_associada && tool.plataforma_associada.toLowerCase().includes(searchTerm)) ||
+                    (tool.tags && JSON.parse(tool.tags).some(tag => tag.toLowerCase().includes(searchTerm))) // Pesquisa em tags
+                );
+            }
+            renderTools(filteredTools);
+        }
+
+        function setupCategoryFilters() {
+            // Usa os 'tipos' existentes nos dados do backend para criar os filtros
+            const categories = ['Todos', ...new Set(toolsData.map(tool => tool.tipo))].sort();
+            categoryFiltersContainer.innerHTML = '';
+            categories.forEach(category => {
+                const button = document.createElement('button');
+                button.textContent = category;
+                button.className = 'filter-button px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-full hover:bg-slate-100 transition-colors';
+                if (category === activeCategory) {
+                    button.classList.add('active');
+                }
+                button.addEventListener('click', () => {
+                    activeCategory = category;
+                    document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+                    applyFilters();
+                });
+                categoryFiltersContainer.appendChild(button);
+            });
+        }
+
+        // --- Event Listeners e Inicialização ---
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Verifica autenticação ao carregar a página
+            if (!checkAuthAndRedirect()) {
+                return; // Para a execução se não estiver autenticado
+            }
+
+            // 2. Event Listeners
+            logoutBtn.addEventListener('click', handleLogout);
+            searchInput.addEventListener('input', applyFilters);
+
+            toggleAddToolFormBtn.addEventListener('click', () => {
+                addToolForm.classList.toggle('show');
+            });
+
+            // Lidar com o envio do formulário de adição de ferramenta
+            addToolForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                hideMessage(addToolMessage);
+
+                const newToolData = {
+                    nome: document.getElementById('toolName').value,
+                    descricao: document.getElementById('toolDescription').value,
+                    url_principal: document.getElementById('toolUrlPrincipal').value,
+                    tipo: document.getElementById('toolType').value, // Mapeado para 'tipo' do backend
+                    plataforma_associada: document.getElementById('toolPlatform').value || null,
+                    status_uso: document.getElementById('toolStatusUse').value || null,
+                    tags: document.getElementById('toolTags').value ? document.getElementById('toolTags').value.split(',').map(tag => tag.trim()) : null,
+                    link_download_windows: document.getElementById('toolLinkWindows').value || null,
+                    link_download_linux: document.getElementById('toolLinkLinux').value || null,
+                    necessita_download: document.getElementById('toolNeedsDownload').checked
+                };
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/ferramentas`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${currentToken}` // Envia o token JWT
+                        },
+                        body: JSON.stringify(newToolData),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        displayMessage(addToolMessage, data.message || 'Ferramenta adicionada com sucesso!', 'success');
+                        addToolForm.reset(); // Limpa o formulário
+                        addToolForm.classList.remove('show'); // Esconde o formulário
+                        fetchTools(); // Recarrega a lista de ferramentas para incluir a nova
+                    } else {
+                        displayMessage(addToolMessage, data.message || 'Erro ao adicionar ferramenta.', 'error');
+                        console.error('Erro ao adicionar ferramenta:', data.message);
+                    }
+                } catch (error) {
+                    displayMessage(addToolMessage, 'Não foi possível conectar ao servidor para adicionar ferramenta.', 'error');
+                    console.error('Erro de rede ou servidor ao adicionar ferramenta:', error);
+                }
+            });
+
+            // 3. Carrega as ferramentas iniciais
+            fetchTools();
+        });
+    </script>
+</body>
+</html>

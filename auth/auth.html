@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login e Cadastro - Guia de Ferramentas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Tailwind slate-50 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .form-container {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 0.75rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            width: 100%;
+            max-width: 420px; /* sm:max-w-md */
+        }
+        .tab-button.active {
+            background-color: #0d9488; /* Tailwind teal-700 */
+            color: white;
+        }
+        .tab-button {
+            transition: all 0.2s ease-in-out;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            border-radius: 0.5rem; /* rounded-md */
+            padding: 0.625rem 1rem; /* px-4 py-2.5 */
+            border: 1px solid #cbd5e1; /* border-slate-300 */
+            font-size: 0.9375rem; /* text-base */
+            width: 100%;
+            box-sizing: border-box; /* Ensures padding doesn't increase total width */
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            outline: none;
+            border-color: #14b8a6; /* teal-500 */
+            box-shadow: 0 0 0 3px rgba(20, 184, 166, 0.25); /* ring-teal-500/50 */
+        }
+        .btn-primary {
+            background-color: #0d9488; /* teal-700 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.2s ease-in-out;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background-color: #0f766e; /* teal-800 */
+        }
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .message.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+            border: 1px solid #10b981; /* green-500 */
+        }
+        .message.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #b91c1c; /* red-800 */
+            border: 1px solid #ef4444; /* red-500 */
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2 class="text-3xl font-extrabold text-center text-slate-900 mb-6">Acesso ao Guia</h2>
+
+        <div class="flex mb-6 border-b border-slate-200">
+            <button id="showLogin" class="tab-button flex-1 py-3 text-lg font-semibold text-slate-700 rounded-tl-lg hover:bg-slate-100 active">Login</button>
+            <button id="showRegister" class="tab-button flex-1 py-3 text-lg font-semibold text-slate-700 rounded-tr-lg hover:bg-slate-100">Cadastre-se</button>
+        </div>
+
+        <!-- Seção de Login -->
+        <div id="loginSection" class="active-section">
+            <form id="loginForm" class="space-y-5">
+                <div>
+                    <label for="loginEmail" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <input type="email" id="loginEmail" name="email" placeholder="seuemail@exemplo.com" required class="block w-full">
+                </div>
+                <div>
+                    <label for="loginPassword" class="block text-sm font-medium text-slate-700 mb-1">Senha</label>
+                    <input type="password" id="loginPassword" name="password" placeholder="Sua senha" required class="block w-full">
+                </div>
+                <button type="submit" class="btn-primary mt-6">Entrar</button>
+                <div id="loginMessage" class="message hidden"></div>
+            </form>
+        </div>
+
+        <!-- Seção de Cadastro -->
+        <div id="registerSection" class="hidden">
+            <form id="registerForm" class="space-y-5">
+                <div>
+                    <label for="registerUsername" class="block text-sm font-medium text-slate-700 mb-1">Nome de Usuário</label>
+                    <input type="text" id="registerUsername" name="username" placeholder="seu_nome_de_usuario" required class="block w-full">
+                </div>
+                <div>
+                    <label for="registerEmail" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                    <input type="email" id="registerEmail" name="email" placeholder="seuemail@exemplo.com" required class="block w-full">
+                </div>
+                <div>
+                    <label for="registerPassword" class="block text-sm font-medium text-slate-700 mb-1">Senha</label>
+                    <input type="password" id="registerPassword" name="password" placeholder="Crie uma senha forte" required class="block w-full">
+                </div>
+                <button type="submit" class="btn-primary mt-6">Cadastrar</button>
+                <div id="registerMessage" class="message hidden"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const showLoginBtn = document.getElementById('showLogin');
+            const showRegisterBtn = document.getElementById('showRegister');
+            const loginSection = document.getElementById('loginSection');
+            const registerSection = document.getElementById('registerSection');
+            const loginForm = document.getElementById('loginForm');
+            const registerForm = document.getElementById('registerForm');
+            const loginMessage = document.getElementById('loginMessage');
+            const registerMessage = document.getElementById('registerMessage');
+
+            const API_BASE_URL = 'http://localhost:3000/api/auth'; // Verifique se esta URL está correta para seu backend
+
+            // Função para exibir mensagens na UI
+            function displayMessage(element, message, type) {
+                element.textContent = message;
+                element.className = `message ${type}`;
+                element.classList.remove('hidden');
+            }
+
+            // Função para esconder mensagens
+            function hideMessage(element) {
+                element.classList.add('hidden');
+                element.textContent = '';
+            }
+
+            // Alternar entre as seções de Login e Cadastro
+            showLoginBtn.addEventListener('click', () => {
+                loginSection.classList.remove('hidden');
+                registerSection.classList.add('hidden');
+                showLoginBtn.classList.add('active');
+                showRegisterBtn.classList.remove('active');
+                hideMessage(loginMessage);
+                hideMessage(registerMessage);
+            });
+
+            showRegisterBtn.addEventListener('click', () => {
+                registerSection.classList.remove('hidden');
+                loginSection.classList.add('hidden');
+                showRegisterBtn.classList.add('active');
+                showLoginBtn.classList.remove('active');
+                hideMessage(loginMessage);
+                hideMessage(registerMessage);
+            });
+
+            // Lidar com o envio do formulário de Login
+            loginForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                hideMessage(loginMessage);
+
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ email, password }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        displayMessage(loginMessage, data.message, 'success');
+                        // Armazenar o token e informações do usuário no localStorage
+                        localStorage.setItem('token', data.token);
+                        localStorage.setItem('user', JSON.stringify(data.user)); // Armazena user.id, user.username, user.email, user.role
+                        console.log('Login bem-sucedido!', data);
+                        // Redirecionar para a página principal após o login (ex: index.html ou dashboard)
+                        window.location.href = 'dashboard.html'; // Descomente e ajuste conforme sua página principal
+                    } else {
+                        displayMessage(loginMessage, data.message || 'Erro ao fazer login.', 'error');
+                        console.error('Erro de login:', data.message);
+                    }
+                } catch (error) {
+                    displayMessage(loginMessage, 'Não foi possível conectar ao servidor. Tente novamente mais tarde.', 'error');
+                    console.error('Erro de rede ou servidor:', error);
+                }
+            });
+
+            // Lidar com o envio do formulário de Cadastro
+            registerForm.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                hideMessage(registerMessage);
+
+                const username = document.getElementById('registerUsername').value;
+                const email = document.getElementById('registerEmail').value;
+                const password = document.getElementById('registerPassword').value;
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/register`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ username, email, password }),
+                    });
+
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        displayMessage(registerMessage, data.message, 'success');
+                        registerForm.reset(); // Limpa o formulário após sucesso
+                        // Opcional: Mudar para a tela de login após o registro
+                        // showLoginBtn.click();
+                    } else {
+                        displayMessage(registerMessage, data.message || 'Erro ao cadastrar usuário.', 'error');
+                        console.error('Erro de cadastro:', data.message);
+                    }
+                } catch (error) {
+                    displayMessage(registerMessage, 'Não foi possível conectar ao servidor. Tente novamente mais tarde.', 'error');
+                    console.error('Erro de rede ou servidor:', error);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
