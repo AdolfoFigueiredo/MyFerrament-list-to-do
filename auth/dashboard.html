@@ -44,6 +44,23 @@
         .btn-primary:hover {
             background-color: #0f766e; /* teal-800 */
         }
+        .message {
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        .message.success {
+            background-color: #d1fae5; /* green-100 */
+            color: #065f46; /* green-800 */
+            border: 1px solid #10b981; /* green-500 */
+        }
+        .message.error {
+            background-color: #fee2e2; /* red-100 */
+            color: #b91c1c; /* red-800 */
+            border: 1px solid #ef4444; /* red-500 */
+        }
     </style>
 </head>
 <body class="text-slate-800">
@@ -70,11 +87,11 @@
         </section>
 
         <section id="addToolSection" class="mb-10 p-6 bg-white rounded-lg shadow-md hidden">
-            <h2 class="text-2xl font-bold text-slate-900 mb-4">Adicionar Nova Ferramenta</h2>
+            <h2 id="formTitle" class="text-2xl font-bold text-slate-900 mb-4">Adicionar Nova Ferramenta</h2>
             <button id="toggleAddToolForm" class="bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-colors mb-4">
                 Mostrar/Esconder Formulário
             </button>
-            <p class="text-sm text-slate-500 mb-4">Ferramentas adicionadas aqui serão salvas permanentemente no banco de dados.</p>
+            <p id="formDescription" class="text-sm text-slate-500 mb-4">Ferramentas adicionadas aqui serão salvas permanentemente no banco de dados.</p>
 
             <form id="addToolForm" class="hidden-form grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Campos do formulário: Ajustados para o backend -->
@@ -124,7 +141,7 @@
                     <input type="checkbox" id="toolNeedsDownload" name="necessita_download" class="mt-1"> Sim
                 </div>
                 <div class="md:col-span-2 flex justify-end">
-                    <button type="submit" class="btn-primary mt-6">Adicionar Ferramenta</button>
+                    <button type="submit" id="submitToolBtn" class="btn-primary mt-6">Adicionar Ferramenta</button>
                 </div>
                  <div id="addToolMessage" class="message hidden"></div>
             </form>
@@ -142,6 +159,7 @@
         let currentToken = null; // Armazena o JWT
         let toolsData = []; // Armazena os dados das ferramentas carregadas do backend
         let activeCategory = 'Todos'; // Categoria ativa para filtro
+        let editingToolId = null; // <-- NOVO: Armazena o ID da ferramenta que está sendo editada
 
         // Elementos do DOM
         const userNameSpan = document.getElementById('userName');
@@ -154,6 +172,9 @@
         const searchInput = document.getElementById('searchInput');
         const categoryFiltersContainer = document.getElementById('categoryFilters');
         const addToolMessage = document.getElementById('addToolMessage');
+        const submitToolBtn = document.getElementById('submitToolBtn'); // <-- NOVO: Botão de submit do formulário
+        const formTitle = document.getElementById('formTitle'); // <-- NOVO: Título do formulário
+        const formDescription = document.getElementById('formDescription'); // <-- NOVO: Descrição do formulário
 
 
         // --- Funções de Autenticação e Autorização ---
@@ -253,10 +274,22 @@
                 const description = tool.descricao;
                 const linkLinux = tool.link_download_linux;
                 const linkWindows = tool.link_download_windows;
-                const needsDownload = tool.necessita_download;
+                const needsDownload = tool.necessita_download; // 0 ou 1 do DB
 
-                const linksDisabled = (!linkLinux || linkLinux === '#') && (!linkWindows || linkWindows === '#');
-                const linkClasses = linksDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-teal-600';
+                // Botões de Ação para SuperAdmin
+                let adminActionsHtml = '';
+                if (currentUser && currentUser.role === 'super_admin') {
+                    adminActionsHtml = `
+                        <div class="flex gap-2">
+                            <button class="bg-blue-500 hover:bg-blue-600 text-white text-sm font-bold py-1 px-3 rounded-md transition-colors" onclick="handleEditTool(${tool.id})">
+                                Editar
+                            </button>
+                            <button class="bg-red-500 hover:bg-red-600 text-white text-sm font-bold py-1 px-3 rounded-md transition-colors" onclick="handleDeleteTool(${tool.id})">
+                                Excluir
+                            </button>
+                        </div>
+                    `;
+                }
 
                 card.innerHTML = `
                     <div class="flex-grow">
@@ -267,26 +300,110 @@
                         <p class="text-sm text-slate-500 mb-4">${platform}</p>
                         <p class="text-slate-700">${description}</p>
                     </div>
-                    <div class="mt-6 pt-4 border-t border-slate-200 flex justify-end items-center gap-4">
-                        ${linkLinux && linkLinux !== '#' ? `
-                            <a href="${linkLinux}" target="_blank" rel="noopener noreferrer" class="text-slate-600 hover:text-teal-600" title="Download para Linux">
-                                <span class="text-2xl">🐧</span>
-                            </a>
-                        ` : `
-                            <span class="text-slate-400 opacity-50 cursor-not-allowed text-2xl" title="Link para Linux não disponível">🐧</span>
-                        `}
-                        ${linkWindows && linkWindows !== '#' ? `
-                            <a href="${linkWindows}" target="_blank" rel="noopener noreferrer" class="text-slate-600 hover:text-teal-600" title="Download para Windows">
-                                <span class="text-2xl">🪟</span>
-                            </a>
-                        ` : `
-                            <span class="text-slate-400 opacity-50 cursor-not-allowed text-2xl" title="Link para Windows não disponível">🪟</span>
-                        `}
+                    <div class="mt-6 pt-4 border-t border-slate-200 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            ${linkLinux && linkLinux !== '#' ? `
+                                <a href="${linkLinux}" target="_blank" rel="noopener noreferrer" class="text-slate-600 hover:text-teal-600" title="Download para Linux">
+                                    <span class="text-2xl">🐧</span>
+                                </a>
+                            ` : `
+                                <span class="text-slate-400 opacity-50 cursor-not-allowed text-2xl" title="Link para Linux não disponível">🐧</span>
+                            `}
+                            ${linkWindows && linkWindows !== '#' ? `
+                                <a href="${linkWindows}" target="_blank" rel="noopener noreferrer" class="text-slate-600 hover:text-teal-600" title="Download para Windows">
+                                    <span class="text-2xl">🪟</span>
+                                </a>
+                            </label>` : `
+                                <span class="text-slate-400 opacity-50 cursor-not-allowed text-2xl" title="Link para Windows não disponível">🪟</span>
+                            `}
+                             <span class="text-xs text-slate-500 ml-2">Necessita Download: ${needsDownload ? 'Sim' : 'Não'}</span>
+                        </div>
+                        ${adminActionsHtml} <!-- Renderiza os botões de Admin aqui -->
                     </div>
                 `;
                 toolsGrid.appendChild(card);
             });
         }
+
+        // --- Funções de Edição e Exclusão ---
+        // A lógica real para chamar a API de PUT e DELETE virá nos próximos níveis.
+
+        async function handleEditTool(toolId) { // <-- Função de Edição Atualizada
+            console.log('Editar ferramenta com ID:', toolId);
+            hideMessage(addToolMessage); // Esconde qualquer mensagem anterior
+
+            // 1. Busca os dados da ferramenta para preencher o formulário
+            try {
+                const response = await fetch(`${API_BASE_URL}/ferramentas/${toolId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${currentToken}`
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Não foi possível carregar a ferramenta para edição: ${response.statusText}`);
+                }
+                const toolToEdit = await response.json();
+                console.log('Dados da ferramenta para edição:', toolToEdit);
+
+                // 2. Preenche o formulário com os dados da ferramenta
+                document.getElementById('toolName').value = toolToEdit.nome || '';
+                document.getElementById('toolDescription').value = toolToEdit.descricao || '';
+                document.getElementById('toolUrlPrincipal').value = toolToEdit.url_principal || '';
+                document.getElementById('toolType').value = toolToEdit.tipo || '';
+                document.getElementById('toolPlatform').value = toolToEdit.plataforma_associada || '';
+                document.getElementById('toolStatusUse').value = toolToEdit.status_uso || '';
+                // As tags vêm como string JSON do backend, precisa parsear e formatar para o input de texto
+                document.getElementById('toolTags').value = toolToEdit.tags ? JSON.parse(toolToEdit.tags).join(', ') : '';
+                document.getElementById('toolLinkWindows').value = toolToEdit.link_download_windows || '';
+                document.getElementById('toolLinkLinux').value = toolToEdit.link_download_linux || '';
+                document.getElementById('toolNeedsDownload').checked = toolToEdit.necessita_download === 1; // MySQL retorna 1/0 para BOOLEAN
+
+                // 3. Muda o estado do formulário para "edição"
+                editingToolId = toolId; // Armazena o ID da ferramenta que está sendo editada
+                formTitle.textContent = 'Editar Ferramenta';
+                formDescription.textContent = 'Modifique os campos e clique em "Atualizar Ferramenta".';
+                submitToolBtn.textContent = 'Atualizar Ferramenta';
+                addToolForm.classList.add('show'); // Garante que o formulário esteja visível
+                addToolSection.scrollIntoView({ behavior: 'smooth' }); // Rola para o formulário
+            } catch (error) {
+                displayMessage(addToolMessage, `Erro ao carregar ferramenta para edição: ${error.message}`, 'error');
+                console.error('Erro ao carregar ferramenta para edição:', error);
+            }
+        }
+
+        async function handleDeleteTool(toolId) { 
+            console.log('Excluir ferramenta com ID:', toolId);
+            // É CRÍTICO pedir confirmação ao usuário antes de deletar!
+            if (!confirm(`Tem certeza que deseja excluir a ferramenta com ID ${toolId}?`)) {
+                return; // Se o usuário cancelar, não faz nada
+            }
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/ferramentas/${toolId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${currentToken}` // Envia o token JWT
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayMessage(toolsGrid, data.message || 'Ferramenta excluída com sucesso!', 'success');
+                    fetchTools(); // Recarrega a lista de ferramentas para remover a excluída
+                } else {
+                    displayMessage(toolsGrid, data.message || 'Erro ao excluir ferramenta.', 'error');
+                    console.error('Erro ao excluir ferramenta:', data.message);
+                }
+            } catch (error) {
+                displayMessage(toolsGrid, 'Não foi possível conectar ao servidor para excluir ferramenta.', 'error');
+                console.error('Erro de rede ou servidor ao excluir ferramenta:', error);
+            }
+        }
+
 
         function applyFilters() {
             const searchTerm = searchInput.value.toLowerCase();
@@ -306,7 +423,7 @@
                     (tool.tags && JSON.parse(tool.tags).some(tag => tag.toLowerCase().includes(searchTerm))) // Pesquisa em tags
                 );
             }
-            renderTools(filteredTools);
+            renderTools(filteredTools); // Re-renderiza as ferramentas filtradas (com os botões corretos)
         }
 
         function setupCategoryFilters() {
@@ -342,16 +459,22 @@
             logoutBtn.addEventListener('click', handleLogout);
             searchInput.addEventListener('input', applyFilters);
 
+            // Toggle do formulário (para adicionar/editar)
             toggleAddToolFormBtn.addEventListener('click', () => {
+                // Se o formulário estiver visível, e estamos no modo de edição, resetamos para o modo de adição
+                if (addToolForm.classList.contains('show') && editingToolId !== null) {
+                    resetAddToolForm(); // Reseta para modo de adição
+                }
                 addToolForm.classList.toggle('show');
             });
 
-            // Lidar com o envio do formulário de adição de ferramenta
+            // Lidar com o envio do formulário de adição/edição de ferramenta
             addToolForm.addEventListener('submit', async (event) => {
                 event.preventDefault();
                 hideMessage(addToolMessage);
 
-                const newToolData = {
+                // Mapeamento dos campos do formulário para o formato do backend
+                const toolData = { // Dados para POST ou PUT
                     nome: document.getElementById('toolName').value,
                     descricao: document.getElementById('toolDescription').value,
                     url_principal: document.getElementById('toolUrlPrincipal').value,
@@ -361,35 +484,69 @@
                     tags: document.getElementById('toolTags').value ? document.getElementById('toolTags').value.split(',').map(tag => tag.trim()) : null,
                     link_download_windows: document.getElementById('toolLinkWindows').value || null,
                     link_download_linux: document.getElementById('toolLinkLinux').value || null,
-                    necessita_download: document.getElementById('toolNeedsDownload').checked
+                    necessita_download: document.getElementById('toolNeedsDownload').checked // Booleano
                 };
 
+                let response;
+                let data;
+
                 try {
-                    const response = await fetch(`${API_BASE_URL}/ferramentas`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${currentToken}` // Envia o token JWT
-                        },
-                        body: JSON.stringify(newToolData),
-                    });
+                    if (editingToolId) { // Se editingToolId não for null, estamos em modo de edição
+                        response = await fetch(`${API_BASE_URL}/ferramentas/${editingToolId}`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${currentToken}`
+                            },
+                            body: JSON.stringify(toolData),
+                        });
+                        data = await response.json();
 
-                    const data = await response.json();
+                        if (response.ok) {
+                            displayMessage(addToolMessage, data.message || 'Ferramenta atualizada com sucesso!', 'success');
+                            resetAddToolForm(); // Reseta para modo de adição após sucesso
+                            addToolForm.classList.remove('show'); // Esconde o formulário
+                            fetchTools(); // Recarrega a lista
+                        } else {
+                            displayMessage(addToolMessage, data.message || 'Erro ao atualizar ferramenta.', 'error');
+                            console.error('Erro ao atualizar ferramenta:', data.message);
+                        }
+                    } else { // Caso contrário, estamos em modo de adição
+                        response = await fetch(`${API_BASE_URL}/ferramentas`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${currentToken}`
+                            },
+                            body: JSON.stringify(toolData),
+                        });
+                        data = await response.json();
 
-                    if (response.ok) {
-                        displayMessage(addToolMessage, data.message || 'Ferramenta adicionada com sucesso!', 'success');
-                        addToolForm.reset(); // Limpa o formulário
-                        addToolForm.classList.remove('show'); // Esconde o formulário
-                        fetchTools(); // Recarrega a lista de ferramentas para incluir a nova
-                    } else {
-                        displayMessage(addToolMessage, data.message || 'Erro ao adicionar ferramenta.', 'error');
-                        console.error('Erro ao adicionar ferramenta:', data.message);
+                        if (response.ok) {
+                            displayMessage(addToolMessage, data.message || 'Ferramenta adicionada com sucesso!', 'success');
+                            addToolForm.reset(); // Limpa o formulário
+                            addToolForm.classList.remove('show'); // Esconde o formulário
+                            fetchTools(); // Recarrega a lista
+                        } else {
+                            displayMessage(addToolMessage, data.message || 'Erro ao adicionar ferramenta.', 'error');
+                            console.error('Erro ao adicionar ferramenta:', data.message);
+                        }
                     }
                 } catch (error) {
-                    displayMessage(addToolMessage, 'Não foi possível conectar ao servidor para adicionar ferramenta.', 'error');
-                    console.error('Erro de rede ou servidor ao adicionar ferramenta:', error);
+                    displayMessage(addToolMessage, `Não foi possível conectar ao servidor para ${editingToolId ? 'atualizar' : 'adicionar'} ferramenta.`, 'error');
+                    console.error(`Erro de rede ou servidor ao ${editingToolId ? 'atualizar' : 'adicionar'} ferramenta:`, error);
                 }
             });
+
+            // Função para resetar o formulário para o modo de "Adicionar"
+            function resetAddToolForm() {
+                addToolForm.reset();
+                editingToolId = null; // Limpa o ID da ferramenta em edição
+                formTitle.textContent = 'Adicionar Nova Ferramenta';
+                formDescription.textContent = 'Ferramentas adicionadas aqui serão salvas permanentemente no banco de dados.';
+                submitToolBtn.textContent = 'Adicionar Ferramenta';
+                hideMessage(addToolMessage); // Esconde mensagens
+            }
 
             // 3. Carrega as ferramentas iniciais
             fetchTools();
