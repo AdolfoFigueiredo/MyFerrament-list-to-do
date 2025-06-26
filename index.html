@@ -1,16 +1,42 @@
 <!DOCTYPE html>
-
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guia de Ferramentas - Boas-Vindas</title>
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Favicon -->
+    <link rel="icon" href="https://placehold.co/32x32/0d9488/ffffff?text=GT" type="image/png">
+
+    <!-- Font Awesome para ícones -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    
+    <!-- Metadados para SEO e Compartilhamento -->
+    <meta name="description" content="Guia Interativo de Ferramentas: Encontre, conheça e compare ferramentas tecnológicas para desenvolvedores e profissionais de TI.">
+    <meta name="keywords" content="ferramentas, tecnologia, desenvolvimento, programação, web, software, guia, produtividade, full-stack">
+    <meta name="author" content="Adolfo Figueiredo">
+
+    <!-- Open Graph / Facebook / LinkedIn -->
+    <meta property="og:title" content="Guia Interativo de Ferramentas">
+    <meta property="og:description" content="Encontre, conheça e compare ferramentas tecnológicas para desenvolvedores e profissionais de TI.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://adolfofigueiredo.github.io/MyFerrament-list-to-do/">
+    <meta property="og:image" content="https://placehold.co/1200x630/0d9488/ffffff?text=Guia+de+Ferramentas">
+
+    
     <style>
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8fafc; /* Tailwind slate-50 */
             color: #334155; /* Tailwind slate-700 */
+            display: flex; /* Para o footer ficar no final da página */
+            flex-direction: column; /* Para o footer ficar no final da página */
+            min-height: 100vh; /* Para o footer ficar no final da página */
+        }
+        .main-content {
+            flex-grow: 1; /* Para o conteúdo principal ocupar o espaço e empurrar o footer */
         }
         .hero-section {
             background-image: linear-gradient(to right bottom, #14b8a6, #0d9488); /* Tailwind teal-500 to teal-700 */
@@ -43,48 +69,57 @@
 </head>
 <body>
 
-    <!-- Hero Section -->
-    <section class="hero-section text-center py-20 px-4">
-        <div class="max-w-4xl mx-auto">
-            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">Bem-vindo ao Guia de Ferramentas</h1>
-            <p class="text-xl md:text-2xl mb-8 leading-relaxed">
-                Este site foi criado para ajudar você a encontrar, conhecer e comparar diferentes ferramentas para as mais diversas finalidades. Aqui você encontrará descrições, dicas de uso e recomendações para facilitar sua escolha e tornar seu dia a dia mais produtivo. Explore as categorias, descubra novidades e aproveite ao máximo o nosso guia!
-            </p>
-            <a href="auth/auth.html" class="btn-primary text-lg">Acessar o Guia</a>
-        </div>
-    </section>
+    <div class="main-content">
+        <!-- Hero Section -->
+        <section class="hero-section text-center py-20 px-4">
+            <div class="max-w-4xl mx-auto">
+                <h1 class="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">Bem-vindo ao Guia de Ferramentas</h1>
+                <p class="text-xl md:text-2xl mb-8 leading-relaxed">
+                    Este site foi criado para ajudar você a encontrar, conhecer e comparar diferentes ferramentas para as mais diversas finalidades. Aqui você encontrará descrições, dicas de uso e recomendações para facilitar sua escolha e tornar seu dia a dia mais produtivo. Explore as categorias, descubra novidades e aproveite ao máximo o nosso guia!
+                </p>
+                <a href="auth/auth.html" class="btn-primary text-lg">Acessar o Guia</a>
+            </div>
+        </section>
 
-    <!-- Content Section -->
-    <section class="py-16 px-4">
-        <div class="max-w-4xl mx-auto text-center">
-            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-8">Desbrave o Mundo das Ferramentas</h2>
-            <p class="text-lg mb-10 leading-relaxed">
-                Navegue pelas seções para encontrar ferramentas de produtividade, design, desenvolvimento e muito mais. Se você tiver alguma sugestão ou quiser contribuir com informações sobre novas ferramentas, sinta-se à vontade para entrar em contato conosco. Estamos sempre abertos a melhorar e expandir nosso guia para melhor atender às suas necessidades.
-            </p>
+        <!-- Content Section -->
+        <section class="py-16 px-4">
+            <div class="max-w-4xl mx-auto text-center">
+                <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-8">Desbrave o Mundo das Ferramentas</h2>
+                <p class="text-lg mb-10 leading-relaxed">
+                    Navegue pelas seções para encontrar ferramentas de produtividade, design, desenvolvimento e muito mais. Se você tiver alguma sugestão ou quiser contribuir com informações sobre novas ferramentas, sinta-se à vontade para entrar em contato conosco. Estamos sempre abertos a melhorar e expandir nosso guia para melhor atender às suas necessidades.
+                </p>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
-                <div class="card">
-                    <h3 class="text-2xl font-semibold text-slate-800 mb-4">Descubra Ferramentas</h3>
-                    <p class="text-slate-600 mb-6">Explore nosso catálogo completo de ferramentas, filtre por categorias e encontre exatamente o que você precisa.</p>
-                    <a href="auth/auth.html" class="btn-primary">Ver Ferramentas</a>
-                </div>
-                <div class="card">
-                    <h3 class="text-2xl font-semibold text-slate-800 mb-4">Contribuir</h3>
-                    <p class="text-slate-600 mb-6">Se você é um super_admin, faça login para adicionar, editar ou remover ferramentas do nosso guia.</p>
-                    <a href="auth/auth.html" class="btn-primary">Login / Cadastro</a>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+                    <div class="card">
+                        <h3 class="text-2xl font-semibold text-slate-800 mb-4">Descubra Ferramentas</h3>
+                        <p class="text-slate-600 mb-6">Explore nosso catálogo completo de ferramentas, filtre por categorias e encontre exatamente o que você precisa.</p>
+                        <a href="auth/auth.html" class="btn-primary">Ver Ferramentas</a>
+                    </div>
+                    <div class="card">
+                        <h3 class="text-2xl font-semibold text-slate-800 mb-4">Contribuir</h3>
+                        <p class="text-slate-600 mb-6">Se você é um super_admin, faça login para adicionar, editar ou remover ferramentas do nosso guia.</p>
+                        <a href="auth/auth.html" class="btn-primary">Login / Cadastro</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
     <!-- Footer -->
     <footer class="bg-slate-800 text-white text-center py-8 mt-12">
         <div class="max-w-4xl mx-auto px-4">
-            <p>&copy; 2025 Guia de Ferramentas. Todos os direitos reservados.</p>
-            <p class="mt-2 text-sm">
-                Desenvolvido Adolfo Figueiredo. <br>
-                O Engenheiro Fudido
-            </p>
+            <p>&copy; 2025 Guia de Ferramentas. Desenvolvido por <span class="font-semibold">Adolfo Figueiredo</span>.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="https://github.com/AdolfoFigueiredo" target="_blank" rel="noopener noreferrer" class="text-white hover:text-teal-400 transition-colors">
+                    <i class="fab fa-github fa-2x"></i>
+                </a>
+                <a href="https://www.linkedin.com/in/caleb-figueiredo-95946a31a/o" target="_blank" rel="noopener noreferrer" class="text-white hover:text-teal-400 transition-colors">
+                    <i class="fab fa-linkedin fa-2x"></i>
+                </a>
+                <a href="https://www.instagram.com/caleb_figueiredo28/" target="_blank" rel="noopener noreferrer" class="text-white hover:text-teal-400 transition-colors">
+                    <i class="fab fa-instagram fa-2x"></i>
+                </a>
+            </div>
         </div>
     </footer>
 
