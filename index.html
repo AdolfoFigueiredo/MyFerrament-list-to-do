@@ -1,231 +1,92 @@
 <!DOCTYPE html>
+
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Guia de Ferramentas</title>
-    <link rel="stylesheet" href="style.css">
-    
+    <title>Guia de Ferramentas - Boas-Vindas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc; /* Tailwind slate-50 */
+            color: #334155; /* Tailwind slate-700 */
+        }
+        .hero-section {
+            background-image: linear-gradient(to right bottom, #14b8a6, #0d9488); /* Tailwind teal-500 to teal-700 */
+            color: white;
+            padding: 6rem 0;
+        }
+        .btn-primary {
+            background-color: #0d9488; /* teal-700 */
+            color: white;
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 600; /* font-semibold */
+            transition: background-color 0.2s ease-in-out;
+            display: inline-block; /* Para o padding funcionar corretamente no link */
+        }
+        .btn-primary:hover {
+            background-color: #0f766e; /* teal-800 */
+        }
+        .card {
+            background-color: white;
+            padding: 2.5rem;
+            border-radius: 0.75rem; /* rounded-lg */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            transition: transform 0.2s ease-in-out;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
 </head>
 <body>
 
-    <h1>Bem vindo ao guia de ferramentas </h1>
-    <p>
-        Este site foi criado para ajudar você a encontrar, conhecer e comparar diferentes ferramentas para as mais diversas finalidades. Aqui você encontrará descrições, dicas de uso e recomendações para facilitar sua escolha e tornar seu dia a dia mais produtivo. Explore as categorias, descubra novidades e aproveite ao máximo o nosso guia!
-    </p>
+    <!-- Hero Section -->
+    <section class="hero-section text-center py-20 px-4">
+        <div class="max-w-4xl mx-auto">
+            <h1 class="text-5xl md:text-6xl font-extrabold mb-6 tracking-tight">Bem-vindo ao Guia de Ferramentas</h1>
+            <p class="text-xl md:text-2xl mb-8 leading-relaxed">
+                Este site foi criado para ajudar você a encontrar, conhecer e comparar diferentes ferramentas para as mais diversas finalidades. Aqui você encontrará descrições, dicas de uso e recomendações para facilitar sua escolha e tornar seu dia a dia mais produtivo. Explore as categorias, descubra novidades e aproveite ao máximo o nosso guia!
+            </p>
+            <a href="auth/auth.html" class="btn-primary text-lg">Acessar o Guia</a>
+        </div>
+    </section>
 
-    <p>
-        Navegue pelas seções para encontrar ferramentas de produtividade, design, desenvolvimento e muito mais. Se você tiver alguma sugestão ou quiser contribuir com informações sobre novas ferramentas, sinta-se à vontade para entrar em contato conosco. Estamos sempre abertos a melhorar e expandir nosso guia para melhor atender às suas necessidades.
-    </p>
+    <!-- Content Section -->
+    <section class="py-16 px-4">
+        <div class="max-w-4xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold text-slate-900 mb-8">Desbrave o Mundo das Ferramentas</h2>
+            <p class="text-lg mb-10 leading-relaxed">
+                Navegue pelas seções para encontrar ferramentas de produtividade, design, desenvolvimento e muito mais. Se você tiver alguma sugestão ou quiser contribuir com informações sobre novas ferramentas, sinta-se à vontade para entrar em contato conosco. Estamos sempre abertos a melhorar e expandir nosso guia para melhor atender às suas necessidades.
+            </p>
 
-    <ul>
-        <li><a href="">Adicionar Ferramentas</a></li>
-        <li><a href="found/foundFerraments.html">Buscar Ferramentas</a></li>
-        <li><a href="auth/auth.html">Login e cadastro</a></li>
-        <li><a href="auth/auth.html">Dashboard</a></li>
-    </ul>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-10">
+                <div class="card">
+                    <h3 class="text-2xl font-semibold text-slate-800 mb-4">Descubra Ferramentas</h3>
+                    <p class="text-slate-600 mb-6">Explore nosso catálogo completo de ferramentas, filtre por categorias e encontre exatamente o que você precisa.</p>
+                    <a href="auth/auth.html" class="btn-primary">Ver Ferramentas</a>
+                </div>
+                <div class="card">
+                    <h3 class="text-2xl font-semibold text-slate-800 mb-4">Contribuir</h3>
+                    <p class="text-slate-600 mb-6">Se você é um super_admin, faça login para adicionar, editar ou remover ferramentas do nosso guia.</p>
+                    <a href="auth/auth.html" class="btn-primary">Login / Cadastro</a>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white text-center py-8 mt-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <p>&copy; 2025 Guia de Ferramentas. Todos os direitos reservados.</p>
+            <p class="mt-2 text-sm">
+                Desenvolvido Adolfo Figueiredo. <br>
+                O Engenheiro Fudido
+            </p>
+        </div>
+    </footer>
 
-    <script src="script.js">
-          const toolsData = [
-            // Linguagens e Desenvolvimento Geral
-            { group: "Linguagens e Desenvolvimento Geral", name: "PHP", category: "Linguagem de Programação", platform: "Desenvolvimento Web", description: "Linguagem de script para desenvolvimento web back-end, criação de sites dinâmicos e APIs.", link_linux: "https://www.php.net/manual/pt_BR/install.unix.php", link_windows: "https://www.php.net/manual/pt_BR/install.windows.php" },
-            { group: "Linguagens e Desenvolvimento Geral", name: "Python", category: "Linguagem de Programação", platform: "Desenvolvimento Geral", description: "Linguagem versátil para desenvolvimento web, ciência de dados, IA, automação e scripts.", link_linux: "https://www.python.org/downloads/source/", link_windows: "https://www.python.org/downloads/windows/" },
-            { group: "Linguagens e Desenvolvimento Geral", name: "Java (JDK)", category: "Linguagem de Programação", platform: "Desenvolvimento Geral", description: "Linguagem orientada a objetos para aplicações corporativas, mobile (Android) e desktop.", link_linux: "https://jdk.java.net/21/", link_windows: "https://jdk.java.net/21/" },
-            { group: "Linguagens e Desenvolvimento Geral", name: "JavaScript (Node.js)", category: "Linguagem de Programação", platform: "Desenvolvimento Web/Backend", description: "Linguagem de script para front-end (navegador) e back-end (Node.js), permitindo desenvolvimento full-stack.", link_linux: "https://nodejs.org/en/download/package-manager", link_windows: "https://nodejs.org/en/download/" },
-            { group: "Linguagens e Desenvolvimento Geral", name: "C/C++ (GCC/MinGW)", category: "Linguagem de Programação", platform: "Sistemas/Performance", description: "Linguagens de baixo nível para desenvolvimento de sistemas, jogos, drivers e aplicações de alta performance.", link_linux: "https://gcc.gnu.org/install/", link_windows: "https://sourceforge.net/projects/mingw-w64/files/" },
-            { group: "Linguagens e Desenvolvimento Geral", name: "Bash", category: "Shell/Linguagem de Script", platform: "Linux/macOS/WSL", description: "Shell padrão em sistemas Unix, usado para automação de tarefas e scripts de linha de comando.", link_linux: "https://www.gnu.org/software/bash/", link_windows: "https://learn.microsoft.com/pt-br/windows/wsl/install" },
-            { group: "Linguagens e Desenvolvimento Geral", name: "HTML5", category: "Linguagem de Marcação", platform: "Desenvolvimento Web (Front-end)", description: "Estrutura o conteúdo de páginas web, definindo elementos como texto, imagens e vídeos.", link_linux: "#", link_windows: "#" },
-            { group: "Linguagens e Desenvolvimento Geral", name: "CSS3", category: "Linguagem de Estilo", platform: "Desenvolvimento Web (Front-end)", description: "Estiliza páginas web, controlando layout, cores, fontes e design responsivo.", link_linux: "#", link_windows: "#" },
-            // Frameworks (Backend)
-            { group: "Frameworks e Bibliotecas", name: "Laravel", category: "Framework Web", platform: "PHP", description: "Framework MVC robusto para desenvolvimento rápido de aplicações web e APIs RESTful.", link_linux: "https://laravel.com/docs/11.x/installation", link_windows: "https://laravel.com/docs/11.x/installation" },
-            { group: "Frameworks e Bibliotecas", name: "Spring Boot", category: "Framework Web", platform: "Java", description: "Facilita a criação de aplicações Java autônomas e de nível de produção com configuração mínima.", link_linux: "https://start.spring.io/", link_windows: "https://start.spring.io/" },
-            { group: "Frameworks e Bibliotecas", name: "Express.js", category: "Framework Web", platform: "Node.js", description: "Framework minimalista e flexível para construir APIs REST e aplicações web com Node.js.", link_linux: "https://expressjs.com/en/starter/installing.html", link_windows: "https://expressjs.com/en/starter/installing.html" },
-            { group: "Frameworks e Bibliotecas", name: "Django", category: "Framework Web", platform: "Python", description: "Framework full-stack de alto nível para desenvolvimento rápido e seguro de aplicações web complexas.", link_linux: "https://docs.djangoproject.com/en/5.0/intro/install/", link_windows: "https://docs.djangoproject.com/en/5.0/intro/install/" },
-            { group: "Frameworks e Bibliotecas", name: "Flask", category: "Micro-framework Web", platform: "Python", description: "Micro-framework leve e flexível para APIs RESTful e aplicações web simples.", link_linux: "https://flask.palletsprojects.com/en/3.0/installation/", link_windows: "https://flask.palletsprojects.com/en/3.0/installation/" },
-            // Frameworks (Frontend)
-            { group: "Frameworks e Bibliotecas", name: "React", category: "Biblioteca JS", platform: "JavaScript", description: "Biblioteca declarativa e eficiente para construir interfaces de usuário interativas.", link_linux: "https://react.dev/learn/start-a-new-react-project", link_windows: "https://react.dev/learn/start-a-new-react-project" },
-            { group: "Frameworks e Bibliotecas", name: "Vue.js", category: "Framework JS", platform: "JavaScript", description: "Framework progressivo para construção de interfaces de usuário e Single Page Applications (SPAs).", link_linux: "https://vuejs.org/guide/quick-start.html", link_windows: "https://vuejs.org/guide/quick-start.html" },
-            { group: "Frameworks e Bibliotecas", name: "Angular", category: "Framework JS", platform: "TypeScript/JavaScript", description: "Framework completo para construir aplicações web complexas e de grande escala.", link_linux: "https://angular.io/guide/setup-local", link_windows: "https://angular.io/guide/setup-local" },
-            { group: "Frameworks e Bibliotecas", name: "Svelte", category: "Framework JS", platform: "JavaScript", description: "Compilador que converte componentes em JavaScript Vanilla altamente otimizado para o navegador.", link_linux: "https://svelte.dev/docs/introduction", link_windows: "https://svelte.dev/docs/introduction" },
-            // Gerenciadores de Pacotes
-            { group: "Gerenciadores de Pacotes e Build Tools", name: "npm", category: "Gerenciador de Pacotes", platform: "Node.js/JavaScript", description: "Gerenciador de pacotes padrão para Node.js, usado para instalar bibliotecas e executar scripts.", link_linux: "https://nodejs.org/en/download/package-manager", link_windows: "https://nodejs.org/en/download/" },
-            { group: "Gerenciadores de Pacotes e Build Tools", name: "pip", category: "Gerenciador de Pacotes", platform: "Python", description: "Gerenciador de pacotes padrão para Python, usado para instalar e gerenciar bibliotecas.", link_linux: "https://pip.pypa.io/en/stable/installation/", link_windows: "https://pip.pypa.io/en/stable/installation/" },
-            { group: "Gerenciadores de Pacotes e Build Tools", name: "Maven", category: "Ferramenta de Build", platform: "Java", description: "Ferramenta de automação de build e gerenciamento de dependências para projetos Java.", link_linux: "https://maven.apache.org/download.cgi", link_windows: "https://maven.apache.org/download.cgi" },
-            { group: "Gerenciadores de Pacotes e Build Tools", name: "Gradle", category: "Ferramenta de Build", platform: "Java/Kotlin", description: "Ferramenta de automação de build poderosa e flexível para diversos tipos de projetos, incluindo Android.", link_linux: "https://gradle.org/install/", link_windows: "https://gradle.org/install/" },
-            { group: "Gerenciadores de Pacotes e Build Tools", name: "Composer", category: "Gerenciador de Pacotes", platform: "PHP", description: "Gerenciador de dependências para PHP, usado para gerenciar bibliotecas e pacotes em projetos PHP.", link_linux: "https://getcomposer.org/download/", link_windows: "https://getcomposer.org/download/" },
-            { group: "Gerenciadores de Pacotes e Build Tools", name: "vcpkg", category: "Gerenciador de Pacotes", platform: "C/C++", description: "Gerenciador de pacotes para C/C++, simplificando a aquisição de bibliotecas de terceiros.", link_linux: "https://github.com/microsoft/vcpkg#quick-start", link_windows: "https://github.com/microsoft/vcpkg#quick-start" },
-            // IDEs e Editores
-            { group: "IDEs e Editores", name: "Visual Studio Code", category: "Editor de Código", platform: "Multiplataforma", description: "Editor de código leve, mas poderoso, com vasto ecossistema de extensões para diversas linguagens.", link_linux: "https://code.visualstudio.com/download#linux", link_windows: "https://code.visualstudio.com/download#windows" },
-            { group: "IDEs e Editores", name: "IntelliJ IDEA Community", category: "IDE", platform: "Java/Kotlin", description: "IDE avançada e completa para desenvolvimento Java, Kotlin e outras linguagens JVM.", link_linux: "https://www.jetbrains.com/idea/download/#section=linux", link_windows: "https://www.jetbrains.com/idea/download/#section=windows" },
-            { group: "IDEs e Editores", name: "PyCharm Community", category: "IDE", platform: "Python", description: "IDE focada no desenvolvimento Python, com recursos avançados para produtividade.", link_linux: "https://www.jetbrains.com/pycharm/download/#section=linux", link_windows: "https://www.jetbrains.com/pycharm/download/#section=windows" },
-            // Bancos de Dados
-            { group: "Bancos de Dados", name: "MySQL", category: "Banco de Dados Relacional", platform: "SQL", description: "Sistema de gerenciamento de banco de dados relacional amplamente popular, de código aberto.", link_linux: "https://dev.mysql.com/downloads/mysql/", link_windows: "https://dev.mysql.com/downloads/mysql/" },
-            { group: "Bancos de Dados", name: "PostgreSQL", category: "Banco de Dados Relacional", platform: "SQL", description: "Banco de dados relacional de objeto-relacional robusto e extensível, conhecido por sua confiabilidade.", link_linux: "https://www.postgresql.org/download/linux/", link_windows: "https://www.enterprisedb.com/downloads/postgres-postgresql-downloads" },
-            { group: "Bancos de Dados", name: "MongoDB", category: "Banco de Dados NoSQL", platform: "JSON/BSON", description: "Banco de dados NoSQL baseado em documentos, ideal para dados semiestruturados e escalabilidade.", link_linux: "https://www.mongodb.com/try/download/community", link_windows: "https://www.mongodb.com/try/download/community" },
-            { group: "Bancos de Dados", name: "Redis", category: "Banco de Dados NoSQL (Key-Value)", platform: "Multiplataforma", description: "Armazenamento de dados em memória, utilizado como cache, broker de mensagens e banco de dados.", link_linux: "https://redis.io/docs/latest/operate/oss_and_stack/install/install-oss/", link_windows: "https://github.com/microsoftarchive/redis/releases" },
-            { group: "Bancos de Dados", name: "DBeaver", category: "Ferramenta de Administração BD", platform: "Multi-BD", description: "Cliente SQL universal e ferramenta de banco de dados para desenvolvedores e administradores de BD.", link_linux: "https://dbeaver.io/download/", link_windows: "https://dbeaver.io/download/" },
-            // DevOps e Terminal
-            { group: "DevOps e Terminal", name: "Docker", category: "Plataforma de Contêineres", platform: "Multiplataforma", description: "Plataforma para desenvolver, empacotar e executar aplicações em contêineres isolados.", link_linux: "https://docs.docker.com/desktop/install/linux-install/", link_windows: "https://docs.docker.com/desktop/install/windows-install/" },
-            { group: "DevOps e Terminal", name: "Kubernetes (kubectl)", category: "Orquestração de Contêineres", platform: "Multiplataforma", description: "Sistema para automação de implantação, escalonamento e gerenciamento de aplicações em contêineres.", link_linux: "https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/", link_windows: "https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/" },
-            { group: "DevOps e Terminal", name: "Git", category: "Controle de Versão", platform: "Multiplataforma", description: "Sistema de controle de versão distribuído para rastrear mudanças no código-fonte.", link_linux: "https://git-scm.com/download/linux", link_windows: "https://git-scm.com/download/win" },
-            { group: "DevOps e Terminal", name: "GitHub", category: "Plataforma de Hospedagem", platform: "Git", description: "Plataforma líder para hospedagem de repositórios Git, colaboração e gerenciamento de projetos.", link_linux: "https://github.com/", link_windows: "https://github.com/" },
-            // Testes e Qualidade
-            { group: "Testes e Qualidade de Código", name: "Jest", category: "Framework de Testes", platform: "JavaScript", description: "Framework de testes de JavaScript focado na simplicidade, usado para React, Vue, Angular.", link_linux: "https://jestjs.io/docs/getting-started", link_windows: "https://jestjs.io/docs/getting-started" },
-            { group: "Testes e Qualidade de Código", name: "ESLint", category: "Linter", platform: "JavaScript", description: "Ferramenta para identificar e reportar padrões problemáticos encontrados no código JavaScript.", link_linux: "https://eslint.org/docs/latest/use/getting-started", link_windows: "https://eslint.org/docs/latest/use/getting-started" },
-            { group: "Testes e Qualidade de Código", name: "Prettier", category: "Formatador de Código", platform: "JavaScript/HTML/CSS", description: "Ferramenta para formatar automaticamente o código, garantindo um estilo consistente.", link_linux: "https://prettier.io/docs/en/install.html", link_windows: "https://prettier.io/docs/en/install.html" },
-            // Gestão de Projetos
-            { group: "Gestão de Projetos", name: "Jira", category: "Ferramenta de Gestão", platform: "Web", description: "Ferramenta líder para gerenciamento de projetos Agile, rastreamento de issues e planejamento de sprints.", link_linux: "https://www.atlassian.com/software/jira", link_windows: "https://www.atlassian.com/software/jira" },
-            { group: "Gestão de Projetos", name: "Trello", category: "Ferramenta de Gestão", platform: "Web", description: "Ferramenta visual de gerenciamento de projetos baseada em quadros Kanban.", link_linux: "https://trello.com/", link_windows: "https://trello.com/" },
-            { group: "Gestão de Projetos", name: "Notion", category: "Espaço de Trabalho", platform: "Web/Desktop", description: "Ferramenta flexível para notas, gestão de projetos, bases de conhecimento e organização pessoal.", link_linux: "https://www.notion.so/desktop", link_windows: "https://www.notion.so/desktop" },
-            // Design e Prototipagem
-            { group: "Design e Prototipagem", name: "Figma", category: "Ferramenta de UI/UX", platform: "Web/Desktop", description: "Ferramenta colaborativa de design de interface e prototipagem, baseada em navegador.", link_linux: "https://www.figma.com/downloads/", link_windows: "https://www.figma.com/downloads/" },
-            { group: "Design e Prototipagem", name: "Penpot", category: "Ferramenta de UI/UX (Open Source)", platform: "Web", description: "Ferramenta de design e prototipagem de código aberto baseada na web.", link_linux: "https://penpot.app/", link_windows: "https://penpot.app/" },
-            // CI/CD e Infraestrutura
-            { group: "CI/CD, Infraestrutura e Ferramentas", name: "Jenkins", category: "Servidor CI/CD", platform: "Java/Multiplataforma", description: "Servidor de automação de código aberto para CI/CD, automatizando o pipeline de desenvolvimento.", link_linux: "https://www.jenkins.io/download/thank-you-for-downloading-linux/", link_windows: "https://www.jenkins.io/download/thank-you-for-downloading-windows/" },
-            { group: "CI/CD, Infraestrutura e Ferramentas", name: "GitHub Actions", category: "Plataforma CI/CD", platform: "Web", description: "Automação de fluxo de trabalho diretamente no GitHub, suportando CI/CD e outras automações.", link_linux: "https://github.com/features/actions", link_windows: "https://github.com/features/actions" },
-            { group: "CI/CD, Infraestrutura e Ferramentas", name: "NGINX", category: "Servidor Web/Proxy Reverso", platform: "Multiplataforma", description: "Servidor web de alta performance, proxy reverso, balanceador de carga e proxy HTTP/HTTPS.", link_linux: "https://nginx.org/en/download.html", link_windows: "https://nginx.org/en/download.html" },
-            { group: "CI/CD, Infraestrutura e Ferramentas", name: "Postman", category: "Cliente API", platform: "Multiplataforma", description: "Ferramenta para construir, testar e documentar APIs, facilitando o desenvolvimento de APIs.", link_linux: "https://www.postman.com/downloads/tagged/linux/", link_windows: "https://www.postman.com/downloads/tagged/windows64/" },
-            { group: "CI/CD, Infraestrutura e Ferramentas", name: "htop", category: "Utilitário CLI", platform: "Linux", description: "Monitor de processos interativo e em tempo real para sistemas Unix, mostrando uso de CPU, memória, etc.", link_linux: "https://htop.dev/", link_windows: "https://learn.microsoft.com/pt-br/windows/wsl/install" },
-            { group: "CI/CD, Infraestrutura e Ferramentas", name: "curl", category: "Utilitário CLI", platform: "Multiplataforma", description: "Ferramenta de linha de comando para transferir dados com sintaxe de URL, suporta diversos protocolos.", link_linux: "https://curl.se/download.html", link_windows: "https://curl.se/windows/" },
-        ];
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const grid = document.getElementById('tools-grid');
-            const categoryFiltersContainer = document.getElementById('category-filters');
-            const searchInput = document.getElementById('search-input');
-            const toggleAddToolFormButton = document.getElementById('toggle-add-tool-form');
-            const addToolForm = document.getElementById('add-tool-form');
-
-            let activeCategory = 'Todos';
-
-            function renderTools(tools) {
-                grid.innerHTML = '';
-                if (tools.length === 0) {
-                    grid.innerHTML = `<p class="text-slate-500 md:col-span-2 lg:col-span-3 text-center">Nenhuma ferramenta encontrada com os filtros atuais.</p>`;
-                    return;
-                }
-                tools.forEach(tool => {
-                    const card = document.createElement('div');
-                    card.className = 'tool-card bg-white rounded-lg shadow-md p-6 flex flex-col';
-                    
-                    const linksDisabled = (tool.link_linux === '#' || !tool.link_linux) && (tool.link_windows === '#' || !tool.link_windows);
-                    const linkClasses = linksDisabled ? 'opacity-50 cursor-not-allowed' : 'hover:text-teal-600';
-
-                    card.innerHTML = `
-                        <div class="flex-grow">
-                            <div class="flex justify-between items-start mb-2">
-                                <h3 class="text-xl font-bold text-slate-900">${tool.name}</h3>
-                                <span class="text-xs font-semibold bg-teal-100 text-teal-800 px-2 py-1 rounded-full whitespace-nowrap">${tool.category}</span>
-                            </div>
-                            <p class="text-sm text-slate-500 mb-4">${tool.platform}</p>
-                            <p class="text-slate-700">${tool.description}</p>
-                        </div>
-                        <div class="mt-6 pt-4 border-t border-slate-200 flex justify-end items-center gap-4">
-                            <a href="${tool.link_linux || '#'}" target="_blank" rel="noopener noreferrer" class="text-slate-600 ${linkClasses}" title="Download para Linux" ${linksDisabled ? 'onclick="return false;"' : ''}>
-                                <span class="text-2xl">🐧</span>
-                            </a>
-                            <a href="${tool.link_windows || '#'}" target="_blank" rel="noopener noreferrer" class="text-slate-600 ${linkClasses}" title="Download para Windows" ${linksDisabled ? 'onclick="return false;"' : ''}>
-                                <span class="text-2xl">🪟</span>
-                            </a>
-                        </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-
-            function applyFilters() {
-                const searchTerm = searchInput.value.toLowerCase();
-                let filteredTools = toolsData;
-
-                if (activeCategory !== 'Todos') {
-                    filteredTools = filteredTools.filter(tool => tool.group === activeCategory);
-                }
-
-                if (searchTerm) {
-                    filteredTools = filteredTools.filter(tool => 
-                        tool.name.toLowerCase().includes(searchTerm) ||
-                        tool.description.toLowerCase().includes(searchTerm) ||
-                        tool.category.toLowerCase().includes(searchTerm) ||
-                        tool.platform.toLowerCase().includes(searchTerm) ||
-                        tool.group.toLowerCase().includes(searchTerm)
-                    );
-                }
-
-                renderTools(filteredTools);
-            }
-
-            function setupCategoryFilters() {
-                const categories = ['Todos', ...new Set(toolsData.map(tool => tool.group))].sort();
-                categoryFiltersContainer.innerHTML = '';
-                categories.forEach(category => {
-                    const button = document.createElement('button');
-                    button.textContent = category;
-                    button.className = 'filter-button px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-full hover:bg-slate-100 transition-colors';
-                    if (category === activeCategory) {
-                        button.classList.add('active');
-                    }
-                    button.addEventListener('click', () => {
-                        activeCategory = category;
-                        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
-                        button.classList.add('active');
-                        applyFilters();
-                    });
-                    categoryFiltersContainer.appendChild(button);
-                });
-            }
-
-            searchInput.addEventListener('input', applyFilters);
-
-            toggleAddToolFormButton.addEventListener('click', () => {
-                addToolForm.classList.toggle('show');
-            });
-
-            addToolForm.addEventListener('submit', (event) => {
-                event.preventDefault(); // Prevent default form submission
-
-                const newTool = {
-                    group: document.getElementById('tool-group').value || 'Outros',
-                    name: document.getElementById('tool-name').value,
-                    category: document.getElementById('tool-category').value || 'Não Definida',
-                    platform: document.getElementById('tool-platform').value || 'Multiplataforma',
-                    description: document.getElementById('tool-description').value,
-                    link_linux: document.getElementById('link-linux').value || '#',
-                    link_windows: document.getElementById('link-windows').value || '#'
-                };
-
-                toolsData.push(newTool);
-                
-                // Re-render categories to include potential new group
-                setupCategoryFilters(); 
-                // Ensure the 'Todos' button is active after adding, or keep current filter
-                if (!categories.includes(activeCategory)) { // If new group, make it active
-                    activeCategory = newTool.group;
-                    // Find and activate the new category button
-                    document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
-                    const newCatButton = Array.from(document.querySelectorAll('.filter-button')).find(btn => btn.textContent === newTool.group);
-                    if (newCatButton) {
-                        newCatButton.classList.add('active');
-                    }
-                } else { // Otherwise, apply current filter
-                     document.querySelectorAll('.filter-button').forEach(btn => {
-                        if (btn.textContent === activeCategory) {
-                            btn.classList.add('active');
-                        } else {
-                            btn.classList.remove('active');
-                        }
-                    });
-                }
-                
-                applyFilters(); // Re-render the grid with the new tool
-
-                addToolForm.reset(); // Clear the form fields
-                addToolForm.classList.remove('show'); // Optionally hide the form after submission
-            });
-
-            setupCategoryFilters();
-            renderTools(toolsData);
-        });
-    </script>
 </body>
 </html>
